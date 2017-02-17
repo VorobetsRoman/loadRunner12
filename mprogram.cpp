@@ -173,22 +173,20 @@ void MProgram::started()
 
 
 //======================================= Сигнал о выходе
-void MProgram::finished(int exitCode, QProcess::ExitStatus exitStatus)
+void MProgram::finished(int exitCode, QProcess::ExitStatus)
 {
     running = false;
-    if (runControl)
-        this->run();
+    if (runControl) this->run();
 }
 
 
 
 
 //======================================= Сигнал о выходе 2
-void MProgram::finished(int exitCode)
+void MProgram::finished(int)
 {
     running = false;
-    if (runControl)
-        this->run();
+    if (runControl) this->run();
 }
 
 

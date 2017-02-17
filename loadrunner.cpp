@@ -13,7 +13,7 @@ LoadRunner::LoadRunner(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LoadRunner)
 {
-    sourceData = new SourceData;
+    sourceData = new SourceData();
 
     ui->setupUi(this);
 
@@ -23,7 +23,6 @@ LoadRunner::LoadRunner(QWidget *parent) :
 
     tableSetup();
 
-    //Внутренние сообщения
     connect(sourceData,           &SourceData::reFilling,
             this,                 &LoadRunner::reFilling      );
 }
@@ -125,14 +124,9 @@ void LoadRunner::reFilling()
 {
     for (int i {0}, m {programList->size()}; i < m; i++)
     {
-        QTableWidgetItem* twiPr = new QTableWidgetItem(programList->at(i)->programName);
-        ui->tbwProgramList->setItem(i, 0, twiPr);
-
-        QTableWidgetItem* twiAr = new QTableWidgetItem(programList->at(i)->programArgs);
-        ui->tbwProgramList->setItem(i, 2, twiAr);
-
-        QTableWidgetItem* twiDl = new QTableWidgetItem(programList->at(i)->delay);
-        ui->tbwProgramList->setItem(i, 3, twiDl);
+        ui->tbwProgramList->item(i, 0)->setText(programList->at(i)->programName);
+        ui->tbwProgramList->item(i, 2)->setText(programList->at(i)->programArgs);
+        ui->tbwProgramList->item(i, 3)->setText(QString::number(programList->at(i)->delay));
     }
 }
 
