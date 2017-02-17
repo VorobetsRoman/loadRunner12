@@ -75,7 +75,6 @@ void SourceData::dataEdited(int row, int column, QString value)
             programList.append(newRecord);
         }
         break;
-    //---------------
     case 1:                                         // нажата кнопка
     {
         QString fileName = QFileDialog::getOpenFileName(0, "Name of executing file", "", "");
@@ -91,14 +90,12 @@ void SourceData::dataEdited(int row, int column, QString value)
         emit reFilling();
     }
         break;
-    //---------------
     case 2:                                         // список аргументов
         if (row < programList.size())
             programList.at(row)->programArgs = value;
         else
             emit reFilling();
         break;
-    //---------------
     case 3:                                         // задержка
         if (row < programList.size())
             programList.at(row)->delay = value.toInt();
@@ -114,8 +111,9 @@ void SourceData::dataEdited(int row, int column, QString value)
 //================================================== Выполнение
 void SourceData::run()
 {
-    for (int i = 0; i < programList.size(); i++)
+    for (int i = 0; i < programList.size(); i++) {
         programList.at(i)->run();
+    }
 }
 
 
@@ -143,8 +141,7 @@ void SourceData::runSelected(int row, int type)
 //================================================== Контроль выполнения
 void SourceData::setChecked(int row, bool value)
 {
-    if (row < programList.size())
-    {
+    if (row < programList.size()) {
         programList.at(row)->setRunControl(value);
     }
 }

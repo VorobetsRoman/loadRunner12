@@ -10,7 +10,7 @@ MProgram::MProgram(QObject *parent) :
     QObject(parent)
 {
     programName = QString("");    
-    this->initialization();
+    initialization();
 }
 
 
@@ -25,7 +25,7 @@ MProgram::MProgram(QString* fileName, QObject *parent) :
     int i = programName.lastIndexOf("/");
     programDirectory = programName.left(i);
 
-    this->initialization();
+    initialization();
 }
 
 
@@ -181,6 +181,8 @@ void MProgram::finished(int exitCode, QProcess::ExitStatus exitStatus)
 }
 
 
+
+
 //======================================= Сигнал о выходе 2
 void MProgram::finished(int exitCode)
 {
@@ -188,3 +190,8 @@ void MProgram::finished(int exitCode)
     if (runControl)
         this->run();
 }
+
+
+
+
+

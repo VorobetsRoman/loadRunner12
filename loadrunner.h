@@ -3,8 +3,10 @@
 
 #include <QWidget>
 #include <QPushButton>
-#include <mprogram.h>
+#include "mprogram.h"
 #include <QCheckBox>
+#include "sourcedata.h"
+#include <QToolButton>
 
 namespace Ui {
 class LoadRunner;
@@ -23,10 +25,7 @@ signals:
     void loadPreset         ();
     void savePreset         ();
     void selectFile         ();
-    void dataEdited         (int, int, QString);
     void run                ();
-    void runSelected        (int, int); //0play 1stop 2reset
-    void setChecked         (int, bool);
 
 public slots:
     void reFilling          ();             // заполнение таблицы
@@ -34,22 +33,29 @@ public slots:
 private:
     static const int rowCount = 10;
 
-    Ui::LoadRunner          *ui;
-    QList <QPushButton*>    pbSelectList,   // список кнопок загрузки
-                            pbPlayList,     // список кнопок запуска
+    Ui::LoadRunner          *ui {NULL};
+    QList <QToolButton*>    pbSelectList;   // список кнопок загрузки
+    QList <QPushButton*>    pbPlayList,     // список кнопок запуска
                             pbStopList,     // список кнопок выключения
                             pbResetList;    // список кнопок перезапуска
     QList <QCheckBox*>      cbControlList;  // список отметок контроля
     QList <MProgram*>       *programList;   // список программ с аргументами и задержкой
+    SourceData* sourceData {NULL};
+
+    void tableSetup         ();
 
 private slots:
     void pbSelectPressed    ();
     void pbPlayPressed      ();
     void pbStopPressed      ();
     void pbResetPressed     ();
-    void leEdited           (int, int);
     void cbCheckChecked     (bool);
-    void cbCheckAll         (bool);
+    void on_pbLoad_released ();
+    void on_pbSave_released ();
+    void on_pbRun_released  ();
+    void on_pbQuit_released ();
+    void on_cbRunControl_toggled(bool checked);
+    void on_tbwProgramList_cellChanged(int row, int column);
 };
 
 #endif // LOADRUNNER_H

@@ -2,7 +2,6 @@
 #include "ui_loadrunner.h"
 #include <QPushButton>
 #include <QDebug>
-#include <sourcedata.h>
 #include <QCheckBox>
 #include <QTextCodec>
 
@@ -14,7 +13,7 @@ LoadRunner::LoadRunner(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LoadRunner)
 {
-    SourceData* sourceData = new SourceData;
+    sourceData = new SourceData;
 
     ui->setupUi(this);
 
@@ -22,91 +21,11 @@ LoadRunner::LoadRunner(QWidget *parent) :
 
     programList = &sourceData->programList;
 
-    { //--------------------- Настройка таблицы
-        ui->tbwProgramList->setColumnCount(8);
-
-        QStringList hHeader;
-        hHeader << "Программа" << "загрузить" << "аргументы" << "задержка" << "P" << "S" << "R" << "Control";
-        ui->tbwProgramList->setHorizontalHeaderLabels(hHeader);
-
-        ui->tbwProgramList->setRowCount(rowCount);
-
-        for (int i = 0; i < rowCount; i++)
-        {
-            QPushButton* pbSelect   = new QPushButton(QString("..."));
-            ui->tbwProgramList      ->setCellWidget (i, 1, pbSelect);
-            pbSelectList            .append         (pbSelect);
-
-            QPushButton* pbPlay     = new QPushButton(QString("P"));
-            ui->tbwProgramList      ->setCellWidget (i, 4, pbPlay);
-            pbPlayList              .append         (pbPlay);
-
-            QPushButton* pbStop     = new QPushButton(QString("S"));
-            ui->tbwProgramList      ->setCellWidget (i, 5, pbStop);
-            pbStopList              .append         (pbStop);
-
-            QPushButton* pbReset    = new QPushButton(QString("R"));
-            ui->tbwProgramList      ->setCellWidget (i, 6, pbReset);
-            pbResetList             .append         (pbReset);
-
-            QCheckBox* cbControl    = new QCheckBox();
-            ui->tbwProgramList      ->setCellWidget (i, 7, cbControl);
-            cbControlList           .append         (cbControl);
-
-        }
-        ui->tbwProgramList->setColumnWidth(1, 30);
-        ui->tbwProgramList->setColumnWidth(3, 50);
-        ui->tbwProgramList->setColumnWidth(4, 30);
-        ui->tbwProgramList->setColumnWidth(5, 30);
-        ui->tbwProgramList->setColumnWidth(6, 30);
-        ui->tbwProgramList->setColumnWidth(7, 60);
-
-    this->reFilling();
-    } //---------------------
-
-
-
-    //Нижние кнопки
-    this->connect(ui->pbQuit,           &QPushButton::released,
-                  this,                 &LoadRunner ::close         );
-    this->connect(ui->pbLoad,           &QPushButton::released,
-                  sourceData,           &SourceData ::loadPreset    );
-    this->connect(ui->pbRun,            &QPushButton::released,
-                  sourceData,           &SourceData ::run           );
-    this->connect(ui->pbSave,           &QPushButton::released,
-                  sourceData,           &SourceData ::savePreset    );
-    this->connect(ui->cbRunControl,     &QCheckBox  ::toggled,
-                  this,                 &LoadRunner ::cbCheckAll    );
-
-    //Таблица
-    this->connect(ui->tbwProgramList,   &QTableWidget::cellChanged,
-                  this,                 &LoadRunner ::leEdited      );
-
-    //Табличные кнопки
-    for (int i = 0; i < rowCount; i++)
-    {
-        this->connect(pbSelectList.at(i),   &QPushButton::released,
-                        this,               &LoadRunner ::pbSelectPressed);
-        this->connect(pbPlayList.at(i),     &QPushButton::released,
-                        this,               &LoadRunner ::pbPlayPressed );
-        this->connect(pbStopList.at(i),     &QPushButton::released,
-                        this,               &LoadRunner ::pbStopPressed );
-        this->connect(pbResetList.at(i),    &QPushButton::released,
-                        this,               &LoadRunner ::pbResetPressed);
-        this->connect(cbControlList.at(i),  &QCheckBox  ::toggled,
-                        this,               &LoadRunner ::cbCheckChecked);
-
-    }
+    tableSetup();
 
     //Внутренние сообщения
-    this->connect(this,                 &LoadRunner::dataEdited,
-                  sourceData,           &SourceData::dataEdited     );
-    this->connect(sourceData,           &SourceData::reFilling,
-                  this,                 &LoadRunner::reFilling      );
-    this->connect(this,                 &LoadRunner::runSelected,
-                  sourceData,           &SourceData::runSelected    );
-    this->connect(this,                 &LoadRunner::setChecked,
-                  sourceData,           &SourceData::setChecked     );
+    connect(sourceData,           &SourceData::reFilling,
+            this,                 &LoadRunner::reFilling      );
 }
 
 
@@ -116,15 +35,95 @@ LoadRunner::LoadRunner(QWidget *parent) :
 LoadRunner::~LoadRunner()
 {
     delete ui;
+    if (sourceData) sourceData->deleteLater();
+    for (QToolButton *pb : pbSelectList) {
+        pb->deleteLater();
+    }
+    for (QPushButton *pb : pbPlayList) {
+        pb->deleteLater();
+    }
+    for (QPushButton *pb : pbStopList) {
+        pb->deleteLater();
+    }
+    for (QPushButton *pb : pbResetList) {
+        pb->deleteLater();
+    }
+    for (QCheckBox *cb : cbControlList) {
+        cb->deleteLater();
+    }
 }
 
+
+
+
+//===================================== Настройка таблицы
+void LoadRunner::tableSetup()
+{
+    ui->tbwProgramList->setColumnCount(8);
+
+    QStringList hHeader {"Программа", "загрузить", "аргументы", "задержка", "P", "S", "R", "Control"};
+    ui->tbwProgramList->setHorizontalHeaderLabels(hHeader);
+
+    ui->tbwProgramList->setRowCount(rowCount);
+
+    for (int i = 0; i < rowCount; i++)
+    {
+        QToolButton* pbSelect   = new QToolButton();
+        ui->tbwProgramList      ->setCellWidget (i, 1, pbSelect);
+        pbSelectList            .append         (pbSelect);
+
+        QPushButton* pbPlay     = new QPushButton(QString("P"));
+        ui->tbwProgramList      ->setCellWidget (i, 4, pbPlay);
+        pbPlayList              .append         (pbPlay);
+
+        QPushButton* pbStop     = new QPushButton(QString("S"));
+        ui->tbwProgramList      ->setCellWidget (i, 5, pbStop);
+        pbStopList              .append         (pbStop);
+
+        QPushButton* pbReset    = new QPushButton(QString("R"));
+        ui->tbwProgramList      ->setCellWidget (i, 6, pbReset);
+        pbResetList             .append         (pbReset);
+
+        QCheckBox* cbControl    = new QCheckBox();
+        ui->tbwProgramList      ->setCellWidget (i, 7, cbControl);
+        cbControlList           .append         (cbControl);
+    }
+    ui->tbwProgramList->setColumnWidth(1, 30);
+    ui->tbwProgramList->setColumnWidth(3, 50);
+    ui->tbwProgramList->setColumnWidth(4, 30);
+    ui->tbwProgramList->setColumnWidth(5, 30);
+    ui->tbwProgramList->setColumnWidth(6, 30);
+    ui->tbwProgramList->setColumnWidth(7, 60);
+
+    //Табличные кнопки
+    for (QToolButton *pb : pbSelectList) {
+        connect(pb,     &QToolButton::released,
+                this,   &LoadRunner ::pbSelectPressed);
+    }
+    for (QPushButton *pb : pbPlayList) {
+        connect(pb,     &QPushButton::released,
+                this,   &LoadRunner ::pbPlayPressed);
+    }
+    for (QPushButton *pb : pbStopList) {
+        connect(pb,     &QPushButton::released,
+                this,   &LoadRunner ::pbStopPressed);
+    }
+    for (QPushButton *pb : pbResetList) {
+        connect(pb,     &QPushButton::released,
+                this,   &LoadRunner ::pbResetPressed);
+    }
+    for (QCheckBox *cb : cbControlList) {
+        connect(cb,     &QCheckBox  ::toggled,
+                this,   &LoadRunner ::cbCheckChecked);
+    }
+}
 
 
 
 //===================================== Заполнение таблицы
 void LoadRunner::reFilling()
 {
-    for (int i = 0; i < programList->size(); i++)
+    for (int i {0}, m {programList->size()}; i < m; i++)
     {
         QTableWidgetItem* twiPr = new QTableWidgetItem(programList->at(i)->programName);
         ui->tbwProgramList->setItem(i, 0, twiPr);
@@ -143,9 +142,9 @@ void LoadRunner::reFilling()
 //===================================== Нажата кнопка "Выбрать"
 void LoadRunner::pbSelectPressed()
 {
-    QPushButton*    pbSender    = (QPushButton*)sender();
+    QToolButton*    pbSender    = (QToolButton*)sender();
     int             i           = pbSelectList.indexOf(pbSender);
-    emit dataEdited(i, 1, QString(""));
+    sourceData->dataEdited(i, 1, QString(""));
 }
 
 
@@ -156,9 +155,8 @@ void LoadRunner::pbPlayPressed()
 {
     QPushButton*    pbSender    = (QPushButton*)sender();
     int             i           = pbPlayList.indexOf(pbSender);
-    emit runSelected(i, 0);
+    sourceData->runSelected(i, 0);
 }
-
 
 
 
@@ -168,7 +166,7 @@ void LoadRunner::pbStopPressed()
 {
     QPushButton*    pbSender    = (QPushButton*)sender();
     int             i           = pbStopList.indexOf(pbSender);
-    emit runSelected(i, 1);
+    sourceData->runSelected(i, 1);
 }
 
 
@@ -179,17 +177,7 @@ void LoadRunner::pbResetPressed()
 {
     QPushButton*    pbSender    = (QPushButton*)sender();
     int             i           = pbResetList.indexOf(pbSender);
-    emit runSelected(i, 2);
-}
-
-
-
-
-//===================================== Изменено содержимое поля
-void LoadRunner::leEdited(int row, int column)
-{
-    QString value = ui->tbwProgramList->item(row, column)->text();
-    emit dataEdited(row, column, value);
+    sourceData->runSelected(i, 2);
 }
 
 
@@ -200,17 +188,66 @@ void LoadRunner::cbCheckChecked(bool value)
 {
     QCheckBox*  cbSender    = (QCheckBox*)sender();
     int         i           = cbControlList.indexOf(cbSender);
-    emit setChecked(i, value);
+    sourceData->setChecked(i, value);
 }
 
 
 
 
-//===================================== Проверка выполнения
-void LoadRunner::cbCheckAll(bool)
+//================================================== Кнопка загрузки
+void LoadRunner::on_pbLoad_released()
 {
-    for (int i = 0; i < rowCount; i++)
-    {
-        cbControlList.at(i)->setChecked(!cbControlList.at(i)->isChecked());
+    sourceData->loadPreset();
+}
+
+
+
+
+//================================================== Кнопка сохранения
+void LoadRunner::on_pbSave_released()
+{
+    sourceData->savePreset();
+}
+
+
+
+
+//================================================== Кнопка выполнения
+void LoadRunner::on_pbRun_released()
+{
+    sourceData->run();
+}
+
+
+
+
+//================================================== Кнопка выхода
+void LoadRunner::on_pbQuit_released()
+{
+//    this->close;
+}
+
+
+
+
+//================================================== Чекбокс контроля
+void LoadRunner::on_cbRunControl_toggled(bool)
+{
+    for (QCheckBox *cb : cbControlList){
+        cb->setChecked(!cb->isChecked());
     }
 }
+
+
+
+
+//================================================== Изменения в ячейке
+void LoadRunner::on_tbwProgramList_cellChanged(int row, int column)
+{
+    QString value = ui->tbwProgramList->item(row, column)->text();
+    sourceData->dataEdited(row, column, value);
+}
+
+
+
+
