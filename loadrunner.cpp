@@ -13,7 +13,7 @@ LoadRunner::LoadRunner(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LoadRunner)
 {
-    sourceData = new SourceData();
+    sourceData = new ProgramList();
 
     ui->setupUi(this);
 
@@ -23,8 +23,8 @@ LoadRunner::LoadRunner(QWidget *parent) :
 
     tableSetup();
 
-    connect(sourceData,           &SourceData::reFilling,
-            this,                 &LoadRunner::reFilling      );
+    connect(sourceData,           &ProgramList::reFilling,
+            this,                 &LoadRunner::reFillingSlot      );
 }
 
 
@@ -70,57 +70,50 @@ void LoadRunner::tableSetup()
         QToolButton* pbSelect   = new QToolButton();
         ui->tbwProgramList      ->setCellWidget (i, 1, pbSelect);
         pbSelectList            .append         (pbSelect);
+        connect(pbSelect,   &QToolButton::released,
+                this,       &LoadRunner ::pbSelectPressed);
 
-        QPushButton* pbPlay     = new QPushButton(QString("P"));
+        QPushButton* pbPlay     = new QPushButton();
+        QPixmap playpixmap(":/buttons/media-play-16.png");
+        pbPlay->setIcon(playpixmap);
         ui->tbwProgramList      ->setCellWidget (i, 4, pbPlay);
         pbPlayList              .append         (pbPlay);
+        connect(pbPlay,     &QPushButton::released,
+                this,       &LoadRunner ::pbPlayPressed);
 
-        QPushButton* pbStop     = new QPushButton(QString("S"));
+        QPushButton* pbStop     = new QPushButton();
+        QPixmap stopPixmap(":/buttons/media-stop-32.png");
+        pbStop->setIcon(stopPixmap);
         ui->tbwProgramList      ->setCellWidget (i, 5, pbStop);
         pbStopList              .append         (pbStop);
+        connect(pbStop,     &QPushButton::released,
+                this,       &LoadRunner ::pbStopPressed);
 
         QPushButton* pbReset    = new QPushButton(QString("R"));
         ui->tbwProgramList      ->setCellWidget (i, 6, pbReset);
         pbResetList             .append         (pbReset);
+        connect(pbReset,    &QPushButton::released,
+                this,       &LoadRunner ::pbResetPressed);
 
         QCheckBox* cbControl    = new QCheckBox();
         ui->tbwProgramList      ->setCellWidget (i, 7, cbControl);
         cbControlList           .append         (cbControl);
+        connect(cbControl,  &QCheckBox  ::toggled,
+                this,       &LoadRunner ::cbCheckChecked);
     }
+
     ui->tbwProgramList->setColumnWidth(1, 30);
     ui->tbwProgramList->setColumnWidth(3, 50);
     ui->tbwProgramList->setColumnWidth(4, 30);
     ui->tbwProgramList->setColumnWidth(5, 30);
     ui->tbwProgramList->setColumnWidth(6, 30);
     ui->tbwProgramList->setColumnWidth(7, 60);
-
-    //Табличные кнопки
-    for (QToolButton *pb : pbSelectList) {
-        connect(pb,     &QToolButton::released,
-                this,   &LoadRunner ::pbSelectPressed);
-    }
-    for (QPushButton *pb : pbPlayList) {
-        connect(pb,     &QPushButton::released,
-                this,   &LoadRunner ::pbPlayPressed);
-    }
-    for (QPushButton *pb : pbStopList) {
-        connect(pb,     &QPushButton::released,
-                this,   &LoadRunner ::pbStopPressed);
-    }
-    for (QPushButton *pb : pbResetList) {
-        connect(pb,     &QPushButton::released,
-                this,   &LoadRunner ::pbResetPressed);
-    }
-    for (QCheckBox *cb : cbControlList) {
-        connect(cb,     &QCheckBox  ::toggled,
-                this,   &LoadRunner ::cbCheckChecked);
-    }
 }
 
 
 
 //===================================== Заполнение таблицы
-void LoadRunner::reFilling()
+void LoadRunner::reFillingSlot()
 {
     for (int i {0}, m {programList->size()}; i < m; i++)
     {
@@ -136,9 +129,7 @@ void LoadRunner::reFilling()
 //===================================== Нажата кнопка "Выбрать"
 void LoadRunner::pbSelectPressed()
 {
-    QToolButton*    pbSender    = (QToolButton*)sender();
-    int             i           = pbSelectList.indexOf(pbSender);
-    sourceData->dataEdited(i, 1, QString(""));
+    sourceData->dataEdited(pbSelectList.indexOf((QToolButton*)sender()), 1, QString(""));
 }
 
 
@@ -147,9 +138,7 @@ void LoadRunner::pbSelectPressed()
 //===================================== Нажата кнопка "Запустить"
 void LoadRunner::pbPlayPressed()
 {
-    QPushButton*    pbSender    = (QPushButton*)sender();
-    int             i           = pbPlayList.indexOf(pbSender);
-    sourceData->runSelected(i, 0);
+    sourceData->runSelected(pbPlayList.indexOf((QPushButton*)sender()), 0);
 }
 
 
@@ -158,9 +147,7 @@ void LoadRunner::pbPlayPressed()
 //===================================== Нажата кнопка "Остановить"
 void LoadRunner::pbStopPressed()
 {
-    QPushButton*    pbSender    = (QPushButton*)sender();
-    int             i           = pbStopList.indexOf(pbSender);
-    sourceData->runSelected(i, 1);
+    sourceData->runSelected(pbStopList.indexOf((QPushButton*)sender()), 1);
 }
 
 
@@ -169,9 +156,7 @@ void LoadRunner::pbStopPressed()
 //===================================== Нажата кнопка "Перезапустить"
 void LoadRunner::pbResetPressed()
 {
-    QPushButton*    pbSender    = (QPushButton*)sender();
-    int             i           = pbResetList.indexOf(pbSender);
-    sourceData->runSelected(i, 2);
+    sourceData->runSelected(pbResetList.indexOf((QPushButton*)sender()), 2);
 }
 
 
@@ -180,9 +165,7 @@ void LoadRunner::pbResetPressed()
 //===================================== Проверка выполнения
 void LoadRunner::cbCheckChecked(bool value)
 {
-    QCheckBox*  cbSender    = (QCheckBox*)sender();
-    int         i           = cbControlList.indexOf(cbSender);
-    sourceData->setChecked(i, value);
+    sourceData->setChecked(cbControlList.indexOf((QCheckBox*)sender()), value);
 }
 
 
@@ -191,7 +174,7 @@ void LoadRunner::cbCheckChecked(bool value)
 //================================================== Кнопка загрузки
 void LoadRunner::on_pbLoad_released()
 {
-    sourceData->loadPreset();
+    sourceData->load();
 }
 
 
@@ -200,7 +183,7 @@ void LoadRunner::on_pbLoad_released()
 //================================================== Кнопка сохранения
 void LoadRunner::on_pbSave_released()
 {
-    sourceData->savePreset();
+    sourceData->save();
 }
 
 

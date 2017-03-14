@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include "mprogram.h"
 #include <QCheckBox>
-#include "sourcedata.h"
+#include "programlist.h"
 #include <QToolButton>
 
 namespace Ui {
@@ -28,7 +28,7 @@ signals:
     void run                ();
 
 public slots:
-    void reFilling          ();             // заполнение таблицы
+    void reFillingSlot          ();             // заполнение таблицы
 
 private:
     static const int rowCount = 10;
@@ -40,7 +40,7 @@ private:
                             pbResetList;    // список кнопок перезапуска
     QList <QCheckBox*>      cbControlList;  // список отметок контроля
     QList <MProgram*>       *programList;   // список программ с аргументами и задержкой
-    SourceData* sourceData {NULL};
+    ProgramList* sourceData {NULL};
 
     void tableSetup         ();
 

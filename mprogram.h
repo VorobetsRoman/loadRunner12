@@ -5,13 +5,15 @@
 #include <QtCore>
 #include <QProcess>
 
+//Класс, описывающий одну программу, и её методы
+
 class MProgram : public QObject
 {
     Q_OBJECT
 public:
     explicit
             MProgram        (QObject *parent = 0);
-            explicit
+    explicit
             MProgram        (QString* fileName, QObject *parent = 0);
             ~MProgram       ();
     void    run             ();

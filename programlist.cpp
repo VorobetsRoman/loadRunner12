@@ -1,4 +1,4 @@
-#include "sourcedata.h"
+#include "programlist.h"
 #include <QFile>
 #include <QFileDialog>
 
@@ -6,7 +6,7 @@
 
 
 //================================================== Конструктор
-SourceData::SourceData(QObject *parent) :
+ProgramList::ProgramList(QObject *parent) :
     QObject(parent)
 {
 }
@@ -15,7 +15,7 @@ SourceData::SourceData(QObject *parent) :
 
 
 //================================================== Загрузка пресета
-void SourceData::loadPreset()
+void ProgramList::load()
 {
     programList.empty();
     QString fileName = QFileDialog::getOpenFileName(0, "Name for preset file", "", "*.prs");
@@ -39,7 +39,7 @@ void SourceData::loadPreset()
 
 
 //================================================== Сохранение пресета
-void SourceData::savePreset()
+void ProgramList::save()
 {
     QString fileName = QFileDialog::getSaveFileName(0, "Name for preset file", "", "*.prs");
     QFile presetFile(fileName + ".prs");
@@ -54,7 +54,7 @@ void SourceData::savePreset()
 
 
 //================================================== Выбор файла
-void SourceData::selectFile()
+void ProgramList::selectFile()
 {
     return;
 }
@@ -63,7 +63,7 @@ void SourceData::selectFile()
 
 
 //================================================== Изменено значение
-void SourceData::dataEdited(int row, int column, QString value)
+void ProgramList::dataEdited(int row, int column, QString value)
 {
     switch (column) {
     case 0:                                         // имя файла
@@ -109,7 +109,7 @@ void SourceData::dataEdited(int row, int column, QString value)
 
 
 //================================================== Выполнение
-void SourceData::run()
+void ProgramList::run()
 {
     for (int i = 0; i < programList.size(); i++) {
         programList.at(i)->run();
@@ -120,7 +120,7 @@ void SourceData::run()
 
 
 //================================================== Выполнение индивидуальное
-void SourceData::runSelected(int row, int type)
+void ProgramList::runSelected(int row, int type)
 {
     switch (type) {
     case 0:
@@ -139,7 +139,7 @@ void SourceData::runSelected(int row, int type)
 
 
 //================================================== Контроль выполнения
-void SourceData::setChecked(int row, bool value)
+void ProgramList::setChecked(int row, bool value)
 {
     if (row < programList.size()) {
         programList.at(row)->setRunControl(value);

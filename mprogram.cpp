@@ -31,6 +31,20 @@ MProgram::MProgram(QString* fileName, QObject *parent) :
 
 
 
+//======================================== Деструктор
+MProgram::~MProgram()
+{
+    if (myProcess){
+        if (myProcess->isOpen()){
+            myProcess->close();
+        }
+        myProcess->deleteLater();
+    }
+}
+
+
+
+
 //======================================== Инициализация
 void MProgram::initialization()
 {
@@ -49,20 +63,6 @@ void MProgram::initialization()
                   this,         SLOT    (finished(int,QProcess::ExitStatus)));
     this->connect(myProcess,    SIGNAL  (finished(int)),
                   this,         SLOT    (finished(int))                     );
-}
-
-
-
-
-//======================================== Деструктор
-MProgram::~MProgram()
-{
-    if (myProcess){
-        if (myProcess->isOpen()){
-            myProcess->close();
-        }
-        myProcess->deleteLater();
-    }
 }
 
 
@@ -173,7 +173,7 @@ void MProgram::started()
 
 
 //======================================= Сигнал о выходе
-void MProgram::finished(int exitCode, QProcess::ExitStatus)
+void MProgram::finished(int, QProcess::ExitStatus)
 {
     running = false;
     if (runControl) this->run();

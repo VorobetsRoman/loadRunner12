@@ -14,12 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         loadrunner.cpp \
-    sourcedata.cpp \
-    mprogram.cpp
+    mprogram.cpp \
+    programlist.cpp
 
 HEADERS  += loadrunner.h \
-    global_definitions.h \
-    sourcedata.h \
-    mprogram.h
+    mprogram.h \
+    programlist.h
 
 FORMS    += loadrunner.ui
+
+RESOURCES += \
+    buttons.qrc
