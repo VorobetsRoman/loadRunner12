@@ -1,6 +1,7 @@
 #include "mprogram.h"
 #include <QProcess>
 #include <QFile>
+#include <QDebug>
 
 
 
@@ -9,8 +10,6 @@
 MProgram::MProgram(QObject *parent) :
     QObject(parent)
 {
-    programName = QString("");    
-    initialization();
 }
 
 
@@ -18,14 +17,11 @@ MProgram::MProgram(QObject *parent) :
 
 //======================================== Конструктор с параметром
 MProgram::MProgram(QString* fileName, QObject *parent) :
-    QObject(parent)
+    QObject(parent), programName(*fileName)
 {
-    programName = *fileName;
-
     int i = programName.lastIndexOf("/");
     programDirectory = programName.left(i);
 
-    initialization();
 }
 
 
@@ -45,36 +41,22 @@ MProgram::~MProgram()
 
 
 
-//======================================== Инициализация
-void MProgram::initialization()
-{
-    programArgs = QString("");
-    delay       = 0;
-    running     = false;
-    runControl  = false;
-    myProcess   = new QProcess;
-    this->connect(myProcess,    &QProcess::stateChanged,
-                  this,         &MProgram::stateChanged );
-    this->connect(myProcess,    &QProcess::started,
-                  this,         &MProgram::started      );
-/*    this->connect(myProcess,    &QProcess::finished,
-                  this,         &MProgram::finished     );*/
-    this->connect(myProcess,    SIGNAL  (finished(int,QProcess::ExitStatus)),
-                  this,         SLOT    (finished(int,QProcess::ExitStatus)));
-    this->connect(myProcess,    SIGNAL  (finished(int)),
-                  this,         SLOT    (finished(int))                     );
-}
-
-
-
-
 //======================================== Выполнение
 void MProgram::run()
 {
-    if (!running)
+    if (!myProcess)
     {
+        myProcess = new QProcess();
         myProcess->setWorkingDirectory(programDirectory);
-        myProcess->start(programName + " " + programArgs);
+        myProcess->start(programFileName + " " + programArgs);
+        connect(myProcess,    &QProcess::stateChanged,
+                this,         &MProgram::stateChanged );
+        connect(myProcess,    &QProcess::started,
+                this,         &MProgram::started      );
+        connect(myProcess,    SIGNAL  (finished(int,QProcess::ExitStatus)),
+                this,         SLOT    (finished(int,QProcess::ExitStatus)));
+        connect(myProcess,    SIGNAL  (finished(int)),
+                this,         SLOT    (finished(int)));
     }
 }
 
@@ -84,8 +66,11 @@ void MProgram::run()
 //======================================== Выключение
 void MProgram::stop()
 {
-    if (running) {
+    if (myProcess)
+    {
         myProcess->kill();
+        myProcess->deleteLater();
+        myProcess = NULL;
     }
 }
 
@@ -95,10 +80,9 @@ void MProgram::stop()
 //======================================== Выключение
 void MProgram::reset()
 {
-    if (running) {
-        myProcess->kill();
-        myProcess->waitForFinished(2000);
-        myProcess->start();
+    if (myProcess) {
+        stop();
+        run();
     }
 }
 
@@ -166,7 +150,7 @@ void MProgram::stateChanged(QProcess::ProcessState newstate)
 //======================================= Сигнал о запуске
 void MProgram::started()
 {
-    running = true;
+    emit processChangedState(MP_RUNNING);
 }
 
 
@@ -175,8 +159,9 @@ void MProgram::started()
 //======================================= Сигнал о выходе
 void MProgram::finished(int, QProcess::ExitStatus)
 {
-    running = false;
+    emit processChangedState(MP_FINISHED);
     if (runControl) this->run();
+    qDebug() << "signal 1";
 }
 
 
@@ -185,8 +170,9 @@ void MProgram::finished(int, QProcess::ExitStatus)
 //======================================= Сигнал о выходе 2
 void MProgram::finished(int)
 {
-    running = false;
+    emit processChangedState(MP_FINISHED);
     if (runControl) this->run();
+    qDebug() << "signal 2";
 }
 
 

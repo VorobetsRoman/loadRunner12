@@ -5,7 +5,8 @@
 #include <QtCore>
 #include <QProcess>
 
-//Класс, описывающий одну программу, и её методы
+//* Класс, описывающий одну программу
+enum {MP_RUNNING, MP_FINISHED};
 
 class MProgram : public QObject
 {
@@ -16,6 +17,7 @@ public:
     explicit
             MProgram        (QString* fileName, QObject *parent = 0);
             ~MProgram       ();
+    void    setProgram      ();
     void    run             ();
     void    stop            ();
     void    reset           ();
@@ -23,17 +25,23 @@ public:
     void    readFromFile    (QFile*);
     void    setRunControl   (bool value);
 
-    QString programName;    // путь к файлу
-    QString programArgs;    // аргументы
-    QString programDirectory;
-    int     delay;          // задержка перед запуском
-    bool    running;        // отметка о выполнении
+    QString getProgramName      ()  {return programName;}
+    QString getProgramFullName  ()  {return programFileName;}
+    QString getProgramArgs      ()  {return programArgs;}
+    int     getDelay            ()  {return delay;}
+
+signals:
+    void    processChangedState(int newState);
+
 
 private:
-    void    initialization  ();
-
-    QProcess *myProcess {NULL};
-    bool    runControl;     // отметка о контроле за выполнением
+    QString programName     {""};       // название программы произвольное (отображается)
+    QString programDirectory{""};       // директория программы
+    QString programFileName {""};       // полный путь к исполняемому файлу программы
+    QProcess *myProcess     {NULL};
+    bool    runControl      {false};    // отметка о контроле за выполнением
+    QString programArgs     {""};       // аргументы
+    int     delay           {0};        // задержка перед запуском
 
 private slots:
     void    stateChanged    (QProcess::ProcessState newstate);

@@ -65,44 +65,44 @@ void ProgramList::selectFile()
 //================================================== Изменено значение
 void ProgramList::dataEdited(int row, int column, QString value)
 {
-    switch (column) {
-    case 0:                                         // имя файла
-        if (row < programList.size())
-            programList.at(row)->programName = value;
-        else
-        {
-            MProgram* newRecord = new MProgram(&value);
-            programList.append(newRecord);
-        }
-        break;
-    case 1:                                         // нажата кнопка
-    {
-        QString fileName = QFileDialog::getOpenFileName(0, "Name of executing file", "", "");
-        if (fileName.isEmpty()) break;
+//    switch (column) {
+//    case 0:                                         // имя файла
+//        if (row < programList.size())
+//            programList.at(row)->programName = value;
+//        else
+//        {
+//            MProgram* newRecord = new MProgram(&value);
+//            programList.append(newRecord);
+//        }
+//        break;
+//    case 1:                                         // нажата кнопка
+//    {
+//        QString fileName = QFileDialog::getOpenFileName(0, "Name of executing file", "", "");
+//        if (fileName.isEmpty()) break;
 
-        if (row < programList.size())
-            programList.at(row)->programName = fileName;
-        else
-        {
-            MProgram* newRecord = new MProgram(&fileName);
-            programList.append(newRecord);
-        }
-        emit reFilling();
-    }
-        break;
-    case 2:                                         // список аргументов
-        if (row < programList.size())
-            programList.at(row)->programArgs = value;
-        else
-            emit reFilling();
-        break;
-    case 3:                                         // задержка
-        if (row < programList.size())
-            programList.at(row)->delay = value.toInt();
-        else
-            emit reFilling();
-        break;
-    }
+//        if (row < programList.size())
+//            programList.at(row)->programName = fileName;
+//        else
+//        {
+//            MProgram* newRecord = new MProgram(&fileName);
+//            programList.append(newRecord);
+//        }
+//        emit reFilling();
+//    }
+//        break;
+//    case 2:                                         // список аргументов
+//        if (row < programList.size())
+//            programList.at(row)->programArgs = value;
+//        else
+//            emit reFilling();
+//        break;
+//    case 3:                                         // задержка
+//        if (row < programList.size())
+//            programList.at(row)->delay = value.toInt();
+//        else
+//            emit reFilling();
+//        break;
+//    }
 }
 
 

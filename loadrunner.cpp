@@ -19,7 +19,7 @@ LoadRunner::LoadRunner(QWidget *parent) :
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-    programList = &sourceData->programList;
+    //programList = &sourceData->programList;
 
     tableSetup();
 
@@ -117,9 +117,9 @@ void LoadRunner::reFillingSlot()
 {
     for (int i {0}, m {programList->size()}; i < m; i++)
     {
-        ui->tbwProgramList->item(i, 0)->setText(programList->at(i)->programName);
-        ui->tbwProgramList->item(i, 2)->setText(programList->at(i)->programArgs);
-        ui->tbwProgramList->item(i, 3)->setText(QString::number(programList->at(i)->delay));
+        ui->tbwProgramList->item(i, 0)->setText(programList->at(i)->getProgramName());
+        ui->tbwProgramList->item(i, 2)->setText(programList->at(i)->getProgramArgs());
+        ui->tbwProgramList->item(i, 3)->setText(QString::number(programList->at(i)->getDelay()));
     }
 }
 
