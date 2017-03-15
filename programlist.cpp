@@ -14,6 +14,63 @@ ProgramList::ProgramList(QObject *parent) :
 
 
 
+//================================================== Добавление в списко программы
+void ProgramList::addProgram()
+{
+    QString fileName = QFileDialog::getOpenFileName(0, "Выберите исполняемый файл", qApp->applicationDirPath(), "");
+    MProgram* myProgram = new MProgram(&fileName);
+    programList.append(myProgram);
+}
+
+
+
+
+//==================================================
+void ProgramList::cutProgram(int programId)
+{
+    programList.removeAt(programId);
+}
+
+
+
+
+//==================================================
+void ProgramList::setDelay(int programId, int value)
+{
+    programList.at(programId)->setDelay(value);
+}
+
+
+
+
+//==================================================
+void ProgramList::setAttributes(int programId, QString attributes)
+{
+    programList.at(programId)->setAttributes(attributes);
+}
+
+
+
+
+//==================================================
+void ProgramList::setName(int programId, QString newName)
+{
+    programList.at(programId)->setName(newName);
+}
+
+
+
+
+//==================================================
+void ProgramList::setFile(int programId)
+{
+    QString fileName = QFileDialog::getOpenFileName(0, "Выберите исполняемый файл", qApp->applicationDirPath(), "");
+    programList.at(programId)->setProgram();
+}
+
+
+
+
 //================================================== Загрузка пресета
 void ProgramList::load()
 {
@@ -32,7 +89,6 @@ void ProgramList::load()
     }
     presetFile.close();
 
-    emit reFilling();
 }
 
 
@@ -54,7 +110,7 @@ void ProgramList::save()
 
 
 //================================================== Выбор файла
-void ProgramList::selectFile()
+void ProgramList::selectProgram()
 {
     return;
 }
@@ -63,7 +119,7 @@ void ProgramList::selectFile()
 
 
 //================================================== Изменено значение
-void ProgramList::dataEdited(int row, int column, QString value)
+void ProgramList::changeValue(int programId, int valueId, QString value)
 {
 //    switch (column) {
 //    case 0:                                         // имя файла
@@ -120,9 +176,9 @@ void ProgramList::run()
 
 
 //================================================== Выполнение индивидуальное
-void ProgramList::runSelected(int row, int type)
+void ProgramList::runSelected(int row, int command)
 {
-    switch (type) {
+    switch (command) {
     case 0:
         programList.at(row)->run();
         break;
@@ -145,3 +201,7 @@ void ProgramList::setChecked(int row, bool value)
         programList.at(row)->setRunControl(value);
     }
 }
+
+
+
+

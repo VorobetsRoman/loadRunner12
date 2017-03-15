@@ -10,17 +10,21 @@ class ProgramList : public QObject
     Q_OBJECT
 public:
     explicit ProgramList(QObject *parent = 0);
+    void addProgram     ();
+    void cutProgram     (int programId);
+    void setDelay       (int programId, int value);
+    void setAttributes  (int programId, QString attributes);
+    void setName        (int programId, QString newName);
+    void setFile        (int programId);
+    void load           ();
+    void save           ();
+//    void changeValue    (int programId, int valueId, QString value);
 
 signals:
-    void reFilling  ();
 
 public slots:
-    void load ();
-    void save ();
-    void selectFile ();
-    void dataEdited (int row, int column, QString);
     void run        ();
-    void runSelected(int row, int type);
+    void runSelected(int row, int command);
     void setChecked (int row, bool value);
 
 

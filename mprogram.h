@@ -17,7 +17,7 @@ public:
     explicit
             MProgram        (QString* fileName, QObject *parent = 0);
             ~MProgram       ();
-    void    setProgram      ();
+    void    setProgram      (QString newFileName);
     void    run             ();
     void    stop            ();
     void    reset           ();

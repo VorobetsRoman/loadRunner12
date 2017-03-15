@@ -178,4 +178,13 @@ void MProgram::finished(int)
 
 
 
+//=======================================
+void MProgram::setProgram(QString newFileName)
+{
+    programFileName = newFileName;
+}
+
+
+
+
 

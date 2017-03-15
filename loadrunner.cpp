@@ -22,9 +22,6 @@ LoadRunner::LoadRunner(QWidget *parent) :
     //programList = &sourceData->programList;
 
     tableSetup();
-
-    connect(sourceData,           &ProgramList::reFilling,
-            this,                 &LoadRunner::reFillingSlot      );
 }
 
 
