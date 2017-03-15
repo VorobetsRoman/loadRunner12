@@ -13,31 +13,33 @@ class MProgram : public QObject
     Q_OBJECT
 public:
     explicit
-            MProgram        (QObject *parent = 0);
+            MProgram            (QObject *parent = 0);
     explicit
-            MProgram        (QString* fileName, QObject *parent = 0);
-            ~MProgram       ();
-    void    setProgram      (QString newFileName);
+            MProgram            (QString* fileName, QObject *parent = 0);
+            ~MProgram           ();
+    void    setExecutableFile   (QString newFileName);
+    void    setProgramName      (QString newName);
+    void    setProgramArgs      (QString arguments);
+    void    setRunControl       (bool value);
+    QString getExeFilelName     ()  {return executableFileName;}
+    QString getProgramName      ()  {return programName;}
+    QString getProgramArgs      ()  {return programArgs;}
+    int     getDelay            ()  {return delay;}
+
     void    run             ();
     void    stop            ();
     void    reset           ();
     void    saveToFile      (QFile*);
     void    readFromFile    (QFile*);
-    void    setRunControl   (bool value);
 
-    QString getProgramName      ()  {return programName;}
-    QString getProgramFullName  ()  {return programFileName;}
-    QString getProgramArgs      ()  {return programArgs;}
-    int     getDelay            ()  {return delay;}
 
 signals:
     void    processChangedState(int newState);
 
-
 private:
     QString programName     {""};       // название программы произвольное (отображается)
     QString programDirectory{""};       // директория программы
-    QString programFileName {""};       // полный путь к исполняемому файлу программы
+    QString executableFileName {""};    // полный путь к исполняемому файлу программы
     QProcess *myProcess     {NULL};
     bool    runControl      {false};    // отметка о контроле за выполнением
     QString programArgs     {""};       // аргументы

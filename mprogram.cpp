@@ -17,11 +17,9 @@ MProgram::MProgram(QObject *parent) :
 
 //======================================== Конструктор с параметром
 MProgram::MProgram(QString* fileName, QObject *parent) :
-    QObject(parent), programName(*fileName)
+    QObject(parent)
 {
-    int i = programName.lastIndexOf("/");
-    programDirectory = programName.left(i);
-
+    setExecutableFile(fileName);
 }
 
 
@@ -30,12 +28,49 @@ MProgram::MProgram(QString* fileName, QObject *parent) :
 //======================================== Деструктор
 MProgram::~MProgram()
 {
-    if (myProcess){
+    if (myProcess)
+    {
         if (myProcess->isOpen()){
             myProcess->close();
         }
         myProcess->deleteLater();
     }
+}
+
+
+
+
+//======================================= Задание выполняемого файла
+void MProgram::setExecutableFile(QString newFileName)
+{
+    executableFileName = newFileName;
+    int i = programName.lastIndexOf("/");
+    programDirectory = programName.left(i);
+}
+
+
+
+
+//======================================== Задание имени программы (идентификатора)
+void MProgram::setProgramName(QString newName) {
+    programName = newName;
+}
+
+
+
+
+//======================================== Задание аргументов программы для запуска
+void MProgram::setProgramArgs(QString arguments) {
+    programArgs = arguments;
+}
+
+
+
+
+//======================================== Проверка выполнения
+void MProgram::setRunControl(bool value)
+{
+    runControl = value;
 }
 
 
@@ -48,7 +83,7 @@ void MProgram::run()
     {
         myProcess = new QProcess();
         myProcess->setWorkingDirectory(programDirectory);
-        myProcess->start(programFileName + " " + programArgs);
+        myProcess->start(executableFileName + " " + programArgs);
         connect(myProcess,    &QProcess::stateChanged,
                 this,         &MProgram::stateChanged );
         connect(myProcess,    &QProcess::started,
@@ -77,7 +112,7 @@ void MProgram::stop()
 
 
 
-//======================================== Выключение
+//======================================== Перезагрузка
 void MProgram::reset()
 {
     if (myProcess) {
@@ -94,6 +129,8 @@ void MProgram::saveToFile(QFile *file)
 {
     QByteArray writeArray;
     writeArray.append(programName);
+    writeArray.append("#");
+    writeArray.append(executableFileName);
     writeArray.append("#");
     writeArray.append(programArgs);
     writeArray.append("#");
@@ -112,20 +149,12 @@ void MProgram::readFromFile(QFile *file)
     QString     readString  = readArray.data();
 
     programName = readString.section("#", 0, 0);
-    programArgs = readString.section("#", 1, 1);
-    delay       = readString.section("#", 2, 2).toInt();
+    executableFileName = readString.section("#", 1, 1);
+    programArgs = readString.section("#", 2, 1);
+    delay       = readString.section("#", 3, 2).toInt();
 
     int i = programName.lastIndexOf("/");
     programDirectory = programName.left(i);
-}
-
-
-
-
-//======================================== Проверка выполнения
-void MProgram::setRunControl(bool value)
-{
-    runControl = value;
 }
 
 
@@ -173,15 +202,6 @@ void MProgram::finished(int)
     emit processChangedState(MP_FINISHED);
     if (runControl) this->run();
     qDebug() << "signal 2";
-}
-
-
-
-
-//=======================================
-void MProgram::setProgram(QString newFileName)
-{
-    programFileName = newFileName;
 }
 
 

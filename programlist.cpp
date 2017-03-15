@@ -65,7 +65,7 @@ void ProgramList::setName(int programId, QString newName)
 void ProgramList::setFile(int programId)
 {
     QString fileName = QFileDialog::getOpenFileName(0, "Выберите исполняемый файл", qApp->applicationDirPath(), "");
-    programList.at(programId)->setProgram();
+    programList.at(programId)->setExecutableFile();
 }
 
 
