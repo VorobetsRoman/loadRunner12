@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include "programlist.h"
 #include <QToolButton>
+#include "lrrecord.h"
 
 namespace Ui {
 class LoadRunner;
@@ -43,6 +44,8 @@ private:
     ProgramList* sourceData {NULL};
 
     void tableSetup         ();
+
+    QList <LrRecord*>       tableRows;
 
 private slots:
     void pbSelectPressed    ();

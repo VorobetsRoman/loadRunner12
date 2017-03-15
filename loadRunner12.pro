@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         loadrunner.cpp \
     mprogram.cpp \
-    programlist.cpp
+    programlist.cpp \
+    lrrecord.cpp
 
 HEADERS  += loadrunner.h \
     mprogram.h \
-    programlist.h
+    programlist.h \
+    lrrecord.h
 
 FORMS    += loadrunner.ui
 

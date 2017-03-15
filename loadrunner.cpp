@@ -62,6 +62,18 @@ void LoadRunner::tableSetup()
 
     ui->tbwProgramList->setRowCount(rowCount);
 
+    for (int row = 0; row < rowCount; row++) {
+        LrRecord *lrRecord = new LrRecord(ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0),
+                                          ui->tbwProgramList->cellWidget(row, 0));
+        tableRows.append(lrRecord);
+    }
+
     for (int i = 0; i < rowCount; i++)
     {
         QToolButton* pbSelect   = new QToolButton();
