@@ -17,7 +17,7 @@ public:
     explicit TableRecord(QObject *parent = 0);
     ~TableRecord();
     QLineEdit*      getProgName     ();
-    QToolButton*    getTbSelect     ();
+    QPushButton*    getPbSelect     ();
     QLineEdit*      getArguments    ();
     QLineEdit*      getDelay        ();
     QPushButton*    getPbStart      ();
@@ -38,7 +38,7 @@ public slots:
 private:
     MProgram    *mprogram   {NULL};
     QLineEdit   *progName   {NULL};
-    QToolButton *tbSelect   {NULL};
+    QPushButton *pbSelect   {NULL};
     QLineEdit   *arguments  {NULL};
     QLineEdit   *delay      {NULL};
     QPushButton *pbStart    {NULL};

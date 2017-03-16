@@ -1,5 +1,4 @@
 #include "tablerecord.h"
-#include <QToolButton>
 #include <QPushButton>
 #include <QFileDialog>
 
@@ -28,8 +27,8 @@ TableRecord::~TableRecord()
     if (progName) {
         progName->deleteLater();
     }
-    if (tbSelect) {
-        tbSelect->deleteLater();
+    if (pbSelect) {
+        pbSelect->deleteLater();
     }
     if (arguments) {
         arguments->deleteLater();
@@ -67,16 +66,17 @@ QLineEdit*      TableRecord::getProgName     ()
 
 
 //=====================================
-QToolButton*    TableRecord::getTbSelect     ()
+QPushButton*    TableRecord::getPbSelect     ()
 {
-    if (!tbSelect)
+    if (!pbSelect)
     {
-        tbSelect = new QToolButton();
-        tbSelect->setStyleSheet("max-width:35px;");
-        connect(tbSelect,   &QToolButton    ::released,
-                this,       &TableRecord       ::setExeFileName);
+        QPixmap playPixmap(":/buttons/open.png");
+        pbSelect = new QPushButton(playPixmap, "");
+        pbSelect->setStyleSheet("max-width:35px;");
+        connect(pbSelect,   &QPushButton    ::released,
+                this,       &TableRecord    ::setExeFileName);
     }
-    return tbSelect;
+    return pbSelect;
 }
 
 

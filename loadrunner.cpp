@@ -51,7 +51,7 @@ void LoadRunner::tableSetup()
         TableRecord *lrRecord = new TableRecord();
         tableRows.append(lrRecord);
         ui->tbwProgramList->setCellWidget(row, 0, lrRecord->getProgName());
-        ui->tbwProgramList->setCellWidget(row, 1, lrRecord->getTbSelect());
+        ui->tbwProgramList->setCellWidget(row, 1, lrRecord->getPbSelect());
         ui->tbwProgramList->setCellWidget(row, 2, lrRecord->getArguments());
         ui->tbwProgramList->setCellWidget(row, 3, lrRecord->getDelay());
         ui->tbwProgramList->setCellWidget(row, 4, lrRecord->getPbStart());
