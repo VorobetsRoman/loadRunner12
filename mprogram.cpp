@@ -129,11 +129,11 @@ void MProgram::saveToFile(QFile *file)
 {
     QByteArray writeArray;
     writeArray.append(programName);
-    writeArray.append("#");
+    writeArray.append(char(9));
     writeArray.append(executableFileName);
-    writeArray.append("#");
+    writeArray.append(char(9));
     writeArray.append(programArgs);
-    writeArray.append("#");
+    writeArray.append(char(9));
     writeArray.append(QString::number(delay));
     writeArray.append(char(10));
     file->write(writeArray);
@@ -148,10 +148,10 @@ void MProgram::readFromFile(QFile *file)
     QByteArray  readArray   = file->readLine();
     QString     readString  = readArray.data();
 
-    programName = readString.section("#", 0, 0);
-    executableFileName = readString.section("#", 1, 1);
-    programArgs = readString.section("#", 2, 1);
-    delay       = readString.section("#", 3, 2).toInt();
+    programName = readString.section(char(9), 0, 0);
+    executableFileName = readString.section(char(9), 1, 1);
+    programArgs = readString.section(char(9), 2, 1);
+    delay       = readString.section(char(9), 3, 2).toInt();
 
     int i = programName.lastIndexOf("/");
     programDirectory = programName.left(i);

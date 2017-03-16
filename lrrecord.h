@@ -3,24 +3,43 @@
 
 #include <QObject>
 #include "mprogram.h"
-#include <QTableWidgetItem>
+#include <QLineEdit>
+#include <QToolButton>
+#include <QPushButton>
+#include <QCheckBox>
+
+
+
 class LrRecord : public QObject
 {
     Q_OBJECT
 public:
     explicit LrRecord(QObject *parent = 0);
-    explicit LrRecord(QWidget *cell_0, QWidget *cell_1,
-                      QWidget *cell_2, QWidget *cell_3,
-                      QWidget *cell_4, QWidget *cell_5,
-                      QWidget *cell_6, QWidget *cell_7, QObject *parent = 0);
+    ~LrRecord();
+    QLineEdit*      getProgName     ();
+    QToolButton*    getTbSelect     ();
+    QLineEdit*      getArguments    ();
+    QLineEdit*      getDelay        ();
+    QPushButton*    getPbStart      ();
+    QPushButton*    getPbStop       ();
+    QPushButton*    getPbReset      ();
+    QCheckBox*      getCbControl    ();
+
 signals:
 
 public slots:
 
 private:
-    MProgram *mprogram {NULL};
-    QWidget *setName, *loadFile, *setArgs, *setDelay, *sayPlay,
-            *sayStop, *sayReset, *sayControl;
+    MProgram    *mprogram   {NULL};
+    QLineEdit   *progName   {NULL};
+    QToolButton *tbSelect   {NULL};
+    QLineEdit   *arguments  {NULL};
+    QLineEdit   *delay      {NULL};
+    QPushButton *pbStart    {NULL};
+    QPushButton *pbStop     {NULL};
+    QPushButton *pbReset    {NULL};
+    QCheckBox   *cbControl  {NULL};
+
 };
 
 #endif // LRRECORD_H
