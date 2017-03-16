@@ -2,8 +2,6 @@
 #define LOADRUNNER_H
 
 #include <QWidget>
-#include <QPushButton>
-#include <QCheckBox>
 #include "lrrecord.h"
 
 namespace Ui {
@@ -26,7 +24,7 @@ signals:
     void run                ();
 
 public slots:
-    void reFillingSlot          ();             // заполнение таблицы
+    void reFillingSlot      ();             // заполнение таблицы
 
 private:
     static const int rowCount = 10;

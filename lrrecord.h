@@ -25,6 +25,9 @@ public:
     QPushButton*    getPbReset      ();
     QCheckBox*      getCbControl    ();
 
+    void saveToFile (QFile *presetFile);
+    void setDataFromFile (QString *newData);
+
 signals:
 
 public slots:
@@ -40,6 +43,9 @@ private:
     QPushButton *pbReset    {NULL};
     QCheckBox   *cbControl  {NULL};
 
+    void setExeFileName ();
+    void setDelay       (QString value);
+    void newMprogramValues  ();
 };
 
 #endif // LRRECORD_H

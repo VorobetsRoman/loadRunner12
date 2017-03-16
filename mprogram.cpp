@@ -19,7 +19,7 @@ MProgram::MProgram(QObject *parent) :
 MProgram::MProgram(QString* fileName, QObject *parent) :
     QObject(parent)
 {
-    setExecutableFile(fileName);
+    setExecutableFile(*fileName);
 }
 
 
@@ -127,6 +127,8 @@ void MProgram::reset()
 //======================================== Сохранение в файл
 void MProgram::saveToFile(QFile *file)
 {
+    if (executableFileName == "") return;
+
     QByteArray writeArray;
     writeArray.append(programName);
     writeArray.append(char(9));
@@ -143,18 +145,16 @@ void MProgram::saveToFile(QFile *file)
 
 
 //======================================== Чтение из файла
-void MProgram::readFromFile(QFile *file)
+void MProgram::readFromFile(QString *newData)
 {
-    QByteArray  readArray   = file->readLine();
-    QString     readString  = readArray.data();
-
-    programName = readString.section(char(9), 0, 0);
-    executableFileName = readString.section(char(9), 1, 1);
-    programArgs = readString.section(char(9), 2, 1);
-    delay       = readString.section(char(9), 3, 2).toInt();
+    programName         = newData->section(char(9), 0, 0);
+    executableFileName  = newData->section(char(9), 1, 1);
+    programArgs         = newData->section(char(9), 2, 2);
+    delay               = newData->section(char(9), 3, 3).toInt();
 
     int i = programName.lastIndexOf("/");
     programDirectory = programName.left(i);
+    emit newValues();
 }
 
 

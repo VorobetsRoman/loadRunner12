@@ -21,6 +21,7 @@ public:
     void    setProgramName      (QString newName);
     void    setProgramArgs      (QString arguments);
     void    setRunControl       (bool value);
+    void    setDelay            (int newDelay) {delay = newDelay;}
     QString getExeFilelName     ()  {return executableFileName;}
     QString getProgramName      ()  {return programName;}
     QString getProgramArgs      ()  {return programArgs;}
@@ -30,11 +31,12 @@ public:
     void    stop            ();
     void    reset           ();
     void    saveToFile      (QFile*);
-    void    readFromFile    (QFile*);
+    void    readFromFile    (QString* newData);
 
 
 signals:
     void    processChangedState(int newState);
+    void    newValues       ();
 
 private:
     QString programName     {""};       // название программы произвольное (отображается)
