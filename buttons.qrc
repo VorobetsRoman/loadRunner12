@@ -3,5 +3,7 @@
         <file>media-pause-16.png</file>
         <file>media-play-16.png</file>
         <file>media-stop-32.png</file>
+        <file>open.png</file>
+        <file>save.png</file>
     </qresource>
 </RCC>

@@ -2,7 +2,8 @@
 #define LOADRUNNER_H
 
 #include <QWidget>
-#include "lrrecord.h"
+#include "tablerecord.h"
+#include <QResizeEvent>
 
 namespace Ui {
 class LoadRunner;
@@ -24,13 +25,13 @@ signals:
     void run                ();
 
 public slots:
-    void reFillingSlot      ();             // заполнение таблицы
+    virtual void resizeEvent(QResizeEvent *re);
 
 private:
     static const int rowCount = 10;
 
     Ui::LoadRunner          *ui {NULL};
-    QList <LrRecord*>       tableRows;
+    QList <TableRecord*>       tableRows;
 
     void tableSetup         ();
 
@@ -40,6 +41,8 @@ private slots:
     void on_pbSave_released ();
     void on_pbRun_released  ();
     void on_cbRunControl_toggled(bool checked);
+    void on_pbStop_released();
+    void on_pbReset_released();
 };
 
 #endif // LOADRUNNER_H

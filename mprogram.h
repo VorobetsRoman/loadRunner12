@@ -51,7 +51,6 @@ private slots:
     void    stateChanged    (QProcess::ProcessState newstate);
     void    started         ();
     void    finished        (int, QProcess::ExitStatus);
-    void    finished        (int);
 
 };
 

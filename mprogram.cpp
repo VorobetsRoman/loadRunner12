@@ -81,17 +81,26 @@ void MProgram::run()
 {
     if (!myProcess)
     {
+        QString executableFile;
+        if (executableFileName != "") {
+            executableFile = executableFileName;
+        }
+        else {
+            if (programName != "") {
+                executableFile = programName;
+            }
+            else return;
+        }
+
         myProcess = new QProcess();
-        myProcess->setWorkingDirectory(programDirectory);
-        myProcess->start(executableFileName + " " + programArgs);
         connect(myProcess,    &QProcess::stateChanged,
                 this,         &MProgram::stateChanged );
         connect(myProcess,    &QProcess::started,
                 this,         &MProgram::started      );
-        connect(myProcess,    SIGNAL  (finished(int,QProcess::ExitStatus)),
-                this,         SLOT    (finished(int,QProcess::ExitStatus)));
-        connect(myProcess,    SIGNAL  (finished(int)),
-                this,         SLOT    (finished(int)));
+        connect(myProcess,    SIGNAL  (finished(int, QProcess::ExitStatus)),
+                this,         SLOT    (finished(int, QProcess::ExitStatus)));
+        myProcess->setWorkingDirectory(programDirectory);
+        myProcess->start(executableFile + " " + programArgs);
     }
 }
 
@@ -101,11 +110,8 @@ void MProgram::run()
 //======================================== Выключение
 void MProgram::stop()
 {
-    if (myProcess)
-    {
+    if (myProcess) {
         myProcess->kill();
-        myProcess->deleteLater();
-        myProcess = NULL;
     }
 }
 
@@ -167,6 +173,10 @@ void MProgram::stateChanged(QProcess::ProcessState newstate)
     case QProcess::Running:
         break;
     case QProcess::NotRunning:
+    {
+        myProcess->deleteLater();
+        myProcess = NULL;
+    }
         break;
     case QProcess::Starting:
         break;
@@ -190,19 +200,9 @@ void MProgram::finished(int, QProcess::ExitStatus)
 {
     emit processChangedState(MP_FINISHED);
     if (runControl) this->run();
-    qDebug() << "signal 1";
 }
 
 
-
-
-//======================================= Сигнал о выходе 2
-void MProgram::finished(int)
-{
-    emit processChangedState(MP_FINISHED);
-    if (runControl) this->run();
-    qDebug() << "signal 2";
-}
 
 
 

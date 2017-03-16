@@ -28,7 +28,7 @@ LoadRunner::LoadRunner(QWidget *parent) :
 //===================================== Деструктор
 LoadRunner::~LoadRunner()
 {
-    for (LrRecord *tablerow : tableRows) {
+    for (TableRecord *tablerow : tableRows) {
         tablerow->deleteLater();
     }
     delete ui;
@@ -40,24 +40,23 @@ LoadRunner::~LoadRunner()
 //===================================== Настройка таблицы
 void LoadRunner::tableSetup()
 {
-    ui->tbwProgramList->setColumnCount(8);
+    ui->tbwProgramList->setColumnCount(7);
 
-    QStringList hHeader {"Программа", "загрузить", "аргументы", "задержка", "", "", "", "Control"};
+    QStringList hHeader {"Программа", "загрузить", "аргументы", "задержка", "", "", "Control"};
     ui->tbwProgramList->setHorizontalHeaderLabels(hHeader);
 
     ui->tbwProgramList->setRowCount(rowCount);
 
     for (int row = 0; row < rowCount; row++) {
-        LrRecord *lrRecord = new LrRecord();
+        TableRecord *lrRecord = new TableRecord();
         tableRows.append(lrRecord);
         ui->tbwProgramList->setCellWidget(row, 0, lrRecord->getProgName());
         ui->tbwProgramList->setCellWidget(row, 1, lrRecord->getTbSelect());
         ui->tbwProgramList->setCellWidget(row, 2, lrRecord->getArguments());
         ui->tbwProgramList->setCellWidget(row, 3, lrRecord->getDelay());
         ui->tbwProgramList->setCellWidget(row, 4, lrRecord->getPbStart());
-        ui->tbwProgramList->setCellWidget(row, 5, lrRecord->getPbStop());
-        ui->tbwProgramList->setCellWidget(row, 6, lrRecord->getPbReset());
-        ui->tbwProgramList->setCellWidget(row, 7, lrRecord->getCbControl());
+        ui->tbwProgramList->setCellWidget(row, 5, lrRecord->getPbReset());
+        ui->tbwProgramList->setCellWidget(row, 6, lrRecord->getCbControl());
     }
 
     ui->tbwProgramList->setColumnWidth(1, 30);
@@ -65,15 +64,22 @@ void LoadRunner::tableSetup()
     ui->tbwProgramList->setColumnWidth(4, 30);
     ui->tbwProgramList->setColumnWidth(5, 30);
     ui->tbwProgramList->setColumnWidth(6, 30);
-    ui->tbwProgramList->setColumnWidth(7, 60);
 }
 
 
 
 
-//===================================== Заполнение таблицы
-void LoadRunner::reFillingSlot()
+//=====================================
+void LoadRunner::resizeEvent(QResizeEvent*)
 {
+    ui->tbwProgramList->setColumnWidth(0, ui->tbwProgramList->width() - 42
+                                       - ui->tbwProgramList->columnWidth(1)
+                                       - ui->tbwProgramList->columnWidth(2)
+                                       - ui->tbwProgramList->columnWidth(3)
+                                       - ui->tbwProgramList->columnWidth(4)
+                                       - ui->tbwProgramList->columnWidth(5)
+                                       - ui->tbwProgramList->columnWidth(6)
+                                       );
 }
 
 
@@ -123,7 +129,7 @@ void LoadRunner::on_pbSave_released()
         return;
     }
 
-    for (LrRecord *tableRow : tableRows) {
+    for (TableRecord *tableRow : tableRows) {
         tableRow->saveToFile(&presetFile);
     }
     presetFile.close();
@@ -135,19 +141,45 @@ void LoadRunner::on_pbSave_released()
 //===================================== Кнопка выполнения
 void LoadRunner::on_pbRun_released()
 {
+    for (TableRecord *tableRow : tableRows) {
+        tableRow->runProgram();
+    }
 }
 
 
 
 
 //===================================== Чекбокс контроля
-void LoadRunner::on_cbRunControl_toggled(bool)
+void LoadRunner::on_cbRunControl_toggled(bool newValue)
 {
+    for (TableRecord *tableRow : tableRows) {
+        tableRow->setControl(newValue);
+    }
 }
 
 
 
 
 //=====================================
+void LoadRunner::on_pbStop_released()
+{
+    for (TableRecord *tableRow : tableRows) {
+        tableRow->stopProgram();
+    }
+}
 
 
+
+
+//=====================================
+void LoadRunner::on_pbReset_released()
+{
+    for (TableRecord *tableRow : tableRows) {
+        tableRow->resetProgram();
+    }
+}
+
+
+
+
+//=====================================

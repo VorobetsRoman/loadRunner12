@@ -21,6 +21,10 @@
        <property name="text">
         <string>&amp;Load</string>
        </property>
+       <property name="icon">
+        <iconset resource="buttons.qrc">
+         <normaloff>:/buttons/open.png</normaloff>:/buttons/open.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
@@ -28,12 +32,38 @@
        <property name="text">
         <string>&amp;Save</string>
        </property>
+       <property name="icon">
+        <iconset resource="buttons.qrc">
+         <normaloff>:/buttons/save.png</normaloff>:/buttons/save.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pbRun">
        <property name="text">
         <string>&amp;Run</string>
+       </property>
+       <property name="icon">
+        <iconset resource="buttons.qrc">
+         <normaloff>:/buttons/media-play-16.png</normaloff>:/buttons/media-play-16.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbStop">
+       <property name="text">
+        <string>S&amp;top</string>
+       </property>
+       <property name="icon">
+        <iconset resource="buttons.qrc">
+         <normaloff>:/buttons/media-stop-32.png</normaloff>:/buttons/media-stop-32.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbReset">
+       <property name="text">
+        <string>R&amp;eset</string>
        </property>
       </widget>
      </item>
@@ -52,6 +82,8 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="buttons.qrc"/>
+ </resources>
  <connections/>
 </ui>
