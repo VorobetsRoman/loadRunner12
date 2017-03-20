@@ -7,6 +7,7 @@
 #include <QToolButton>
 #include <QPushButton>
 #include <QCheckBox>
+#include <QTimer>
 
 
 
@@ -45,12 +46,14 @@ private:
     QPushButton *pbReset    {NULL};
     QCheckBox   *cbControl  {NULL};
     int         programState{MP_FINISHED};
+    QTimer      *startTimer {NULL};
 
     void setExeFileName         ();
     void setDelay               (QString value);
     void newMprogramValues      ();
     void on_pbStart_released    ();
     void programChangedState    (int newState);
+    void startTimerTimeout      ();
 };
 
 #endif // LRRECORD_H

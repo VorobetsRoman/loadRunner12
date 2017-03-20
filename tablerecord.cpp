@@ -45,6 +45,9 @@ TableRecord::~TableRecord()
     if (cbControl) {
         cbControl->deleteLater();
     }
+    if (startTimer) {
+        startTimer->deleteLater();
+    }
 }
 
 
@@ -261,7 +264,15 @@ void TableRecord::programChangedState(int newState)
 //=====================================
 void TableRecord::runProgram()
 {
-    mprogram->run();
+    if (!startTimer) {
+        startTimer = new QTimer();
+    }
+    if (startTimer->isActive()) {
+        startTimer->stop();
+    }
+    connect(startTimer, &QTimer     ::timeout,
+            this,       &TableRecord::startTimerTimeout);
+    startTimer->start(mprogram->getDelay() * 1000);
 }
 
 
@@ -280,6 +291,9 @@ void TableRecord::setControl(bool newValue)
 //=====================================
 void TableRecord::stopProgram()
 {
+    if (startTimer->isActive()) {
+        startTimer->stop();
+    }
     mprogram->stop();
 }
 
@@ -294,3 +308,17 @@ void TableRecord::resetProgram()
 
 
 
+
+//=====================================
+void TableRecord::startTimerTimeout()
+{
+    mprogram->run();
+    startTimer->stop();
+    startTimer->deleteLater();
+    startTimer = NULL;
+}
+
+
+
+
+//=====================================
