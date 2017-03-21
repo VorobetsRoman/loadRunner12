@@ -138,7 +138,8 @@ QPushButton*    TableRecord::getPbStart      ()
 //=====================================
 QPushButton*    TableRecord::getPbReset      ()
 {
-    if (!pbReset) {
+    if (!pbReset)
+    {
         pbReset = new QPushButton();
         pbReset->setStyleSheet("max-width:35px;");
         connect(pbReset,    &QPushButton    ::released,
@@ -171,7 +172,8 @@ void TableRecord::setExeFileName()
 {
     QString caption {"Веберите исполняемый файл"};
     QString fileName = QFileDialog::getOpenFileName(0, caption, qApp->applicationDirPath(), "", 0);
-    if (fileName != "") {
+    if (fileName != "")
+    {
         mprogram->setExecutableFile(fileName);
         progName->setText(fileName);
     }
@@ -291,8 +293,10 @@ void TableRecord::setControl(bool newValue)
 //=====================================
 void TableRecord::stopProgram()
 {
-    if (startTimer->isActive()) {
+    if (startTimer && startTimer->isActive()) {
         startTimer->stop();
+        startTimer->deleteLater();
+        startTimer = NULL;
     }
     mprogram->stop();
 }
